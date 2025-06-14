@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step Inside 사고 루틴 학습지</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        /* 사용자 정의 글꼴 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        /* ============== A4 인쇄용 스타일 (1페이지 최적화) ============== */
+        @media print {
+            @page {
+                size: A4;
+                margin: 1.5cm; /* 페이지 여백 */
+            }
+
+            body {
+                padding: 0 !important;
+                margin: 0 !important;
+                background-color: #fff !important;
+                font-size: 10pt; /* 기본 폰트 크기 소폭 축소 */
+            }
+
+            /* 인쇄 시 불필요한 요소 숨기기 */
+            .no-print {
+                display: none !important;
+            }
+
+            /* 컨테이너 여백 및 테두리 제거 */
+            .container-print {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            /* 학생 정보 인쇄 스타일 */
+            .student-info-print {
+                display: flex !important;
+                justify-content: flex-end !important;
+                align-items: center;
+                gap: 16px !important;
+                padding: 6px 0 !important;
+                border-top: 1px solid #ccc !important;
+                border-bottom: 1px solid #ccc !important;
+                margin-bottom: 12px !important;
+            }
+            .student-info-print .flex {
+                gap: 6px !important;
+            }
+            .student-info-print label {
+                font-size: 10pt !important;
+                font-weight: 700 !important;
+            }
+            .student-info-print input {
+                border: none !important;
+                border-bottom: 1px solid #888 !important;
+                border-radius: 0 !important;
+                padding: 2px !important;
+                background: transparent !important;
+                width: 70px;
+            }
+            .student-info-print #name {
+                width: 90px;
+            }
+
+
+            /* 전반적인 수직 여백 대폭 축소 */
+            header, section, main > div {
+                margin-top: 0 !important;
+                margin-bottom: 10px !important; /* 여백 축소 */
+            }
+            header {
+                padding-bottom: 8px !important;
+            }
+            
+            h1 { font-size: 18pt !important; }
+            h2 { font-size: 13pt !important; margin-bottom: 4px !important; }
+            h3 { font-size: 11pt !important; }
+            p { 
+                font-size: 9pt !important;
+                margin-top: 2px !important;
+                margin-bottom: 5px !important; /* 여백 축소 */
+            }
+
+            /* 질문 박스 내부 여백 축소 */
+            .print-p-compact {
+                padding: 8px !important;
+            }
+
+            /* 그리드 간격 제거 (margin으로 대체) */
+            .print-gap-0 {
+                gap: 0 !important;
+            }
+            .print-gap-col-4 > * {
+                padding-right: 12px;
+            }
+             .print-gap-col-4 > *:last-child {
+                padding-right: 0;
+            }
+
+            /* 아이콘/숫자 크기 축소 */
+            .print-icon-sm {
+                font-size: 28px !important;
+            }
+            .print-num-sm {
+                width: 28px !important;
+                height: 28px !important;
+                font-size: 14px !important;
+                border-radius: 6px !important;
+            }
+
+            /* 입력창 스타일 조정 */
+            input[type="text"], textarea {
+                border: 1px solid #ccc !important;
+                background-color: #f9f9f9 !important;
+                padding: 5px !important; /* 패딩 축소 */
+                font-size: 9.5pt !important;
+                box-shadow: none !important;
+            }
+
+            /* 텍스트 영역 높이를 대폭 축소하여 1페이지에 맞춤 */
+            textarea {
+                min-height: 0 !important;
+                resize: none !important;
+                line-height: 1.45 !important;
+            }
+            #q1, #q2, #q3 {
+                height: 105px !important; /* 높이 추가 축소 */
+            }
+            #summary {
+                height: 75px !important; /* 높이 추가 축소 */
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="capture-area" class="container-print w-full max-w-6xl bg-white rounded-2xl shadow-lg p-6 sm:p-10">
+        <header class="flex items-center gap-4 pb-6 border-b">
+            <span class="text-4xl print-icon-sm">📝</span>
+            <h1 class="text-3xl font-bold text-slate-800">Step Inside 사고 루틴 학습지</h1>
+        </header>
+        
+        <section class="student-info-print flex justify-end items-center gap-4 my-6 text-sm">
+            <div class="flex items-center gap-2">
+                <label for="grade" class="font-semibold text-slate-600">학년:</label>
+                <input type="text" id="grade" class="w-16 p-2 border rounded-md">
+            </div>
+            <div class="flex items-center gap-2">
+                <label for="class" class="font-semibold text-slate-600">반:</label>
+                <input type="text" id="class" class="w-16 p-2 border rounded-md">
+            </div>
+            <div class="flex items-center gap-2">
+                <label for="number" class="font-semibold text-slate-600">번호:</label>
+                <input type="text" id="number" class="w-16 p-2 border rounded-md">
+            </div>
+            <div class="flex items-center gap-2">
+                <label for="name" class="font-semibold text-slate-600">이름:</label>
+                <input type="text" id="name" class="w-24 p-2 border rounded-md">
+            </div>
+        </section>
+
+        <main>
+            <div class="bg-amber-100/50 p-5 rounded-lg border border-amber-200 mb-8 print-p-compact">
+                <h2 class="text-xl font-bold text-amber-800 flex items-center gap-2">
+                    <span class="text-xl">⭐</span> 오늘의 대상
+                </h2>
+                <p class="text-slate-600 mt-1 mb-3 text-sm">내가 들어가서 생각해볼 대상은 누구/무엇인가요?</p>
+                <input type="text" id="target" class="w-full p-2 border-slate-300 border-b-2 bg-transparent focus:outline-none focus:border-amber-500 transition" placeholder="대상을 입력하세요...">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 print-gap-0 print-gap-col-4">
+                <div class="bg-blue-50 p-6 rounded-lg border border-blue-100 flex flex-col print-p-compact">
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="flex-shrink-0 w-8 h-8 bg-blue-500 text-white font-bold text-lg rounded-md flex items-center justify-center print-num-sm">1</span>
+                        <h3 class="text-lg font-bold text-slate-800">무엇을 보고, 듣고, 느끼고 있을까?</h3>
+                    </div>
+                    <p class="text-slate-500 text-sm mb-4">→ 내가 이 대상이라면, 지금 무엇을 경험하고 있을까?</p>
+                    <textarea id="q1" class="flex-grow w-full p-3 border border-slate-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="경험을 적어보세요..."></textarea>
+                </div>
+
+                <div class="bg-green-50 p-6 rounded-lg border border-green-100 flex flex-col print-p-compact">
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="flex-shrink-0 w-8 h-8 bg-green-500 text-white font-bold text-lg rounded-md flex items-center justify-center print-num-sm">2</span>
+                        <h3 class="text-lg font-bold text-slate-800">무엇을 알고 있거나 믿고 있을까?</h3>
+                    </div>
+                    <p class="text-slate-500 text-sm mb-4">→ 이 대상의 지식, 신념, 관점은 무엇일까?</p>
+                    <textarea id="q2" class="flex-grow w-full p-3 border border-slate-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="생각을 적어보세요..."></textarea>
+                </div>
+
+                <div class="bg-purple-50 p-6 rounded-lg border border-purple-100 flex flex-col print-p-compact">
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="flex-shrink-0 w-8 h-8 bg-purple-500 text-white font-bold text-lg rounded-md flex items-center justify-center print-num-sm">3</span>
+                        <h3 class="text-lg font-bold text-slate-800">나는 무엇에 관심을 갖고 있을까?</h3>
+                    </div>
+                    <p class="text-slate-500 text-sm mb-4">→ 이 대상의 관심사, 걱정, 바람은 무엇일까?</p>
+                    <textarea id="q3" class="flex-grow w-full p-3 border border-slate-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="관심사를 적어보세요..."></textarea>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-slate-50 p-6 rounded-lg border border-slate-200 print-p-compact">
+                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2 mb-2">
+                    <span class="text-2xl">💡</span> 내가 배운 점 또는 새롭게 이해한 점은?
+                </h2>
+                <p class="text-slate-500 text-sm mb-4">→ 이 활동을 통해 나는 어떤 새로운 생각이나 감정을 갖게 되었나요?</p>
+                <textarea id="summary" class="w-full p-3 border border-slate-300 rounded-md h-32 resize-none focus:outline-none focus:ring-2 focus:ring-slate-400" placeholder="깨달은 점을 자유롭게 적어보세요..."></textarea>
+            </div>
+        </main>
+        
+        <footer class="no-print mt-10 pt-6 border-t">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <div class="flex items-center gap-3">
+                    <p class="text-sm font-semibold text-slate-600">학생용:</p>
+                    <button onclick="downloadAsImage()" class="bg-green-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+                        이미지로 저장
+                    </button>
+                    <button onclick="resetForm()" class="bg-gray-500 text-white font-bold py-2 px-5 rounded-lg hover:bg-gray-600 transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" /></svg>
+                        초기화
+                    </button>
+                </div>
+                <div class="flex items-center gap-3">
+                     <p class="text-sm font-semibold text-slate-600">교사용:</p>
+                    <button onclick="window.print()" class="bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002 2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg>
+                        학습지 인쇄
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <div id="loading" class="no-print hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white text-slate-800 font-bold py-4 px-8 rounded-lg">
+            이미지 생성 중...
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formElements = document.querySelectorAll('input[type="text"], textarea');
+            const LOCAL_STORAGE_KEY = 'step-inside-worksheet-data';
+
+            // --- 데이터 로드 및 저장 ---
+            function saveData() {
+                const data = {};
+                formElements.forEach(el => {
+                    if (el.id) data[el.id] = el.value;
+                });
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+            }
+
+            function loadData() {
+                const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    formElements.forEach(el => {
+                        if (el.id && data[el.id]) {
+                            el.value = data[el.id];
+                        }
+                    });
+                }
+            }
+            
+            // 모든 입력에 대해 자동 저장
+            formElements.forEach(el => {
+                el.addEventListener('input', saveData);
+            });
+            
+            // 페이지 로드 시 데이터 불러오기
+            loadData();
+            
+            // --- 전역 함수 노출 ---
+            window.resetForm = function() {
+                if (confirm('작성한 모든 내용이 지워집니다. 정말 초기화하시겠습니까?')) {
+                    formElements.forEach(el => {
+                        el.value = '';
+                    });
+                    localStorage.removeItem(LOCAL_STORAGE_KEY);
+                    showNotification('모든 내용이 초기화되었습니다.', 'success');
+                    document.getElementById('grade')?.focus();
+                }
+            }
+
+            window.downloadAsImage = async function() {
+                const loadingSpinner = document.getElementById('loading');
+                const captureArea = document.getElementById('capture-area');
+                
+                loadingSpinner.classList.remove('hidden');
+                
+                try {
+                    const canvas = await html2canvas(captureArea, {
+                        scale: 2, // 고해상도 출력
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    const link = document.createElement('a');
+                    const studentName = document.getElementById('name').value || '학생';
+                    const date = new Date().toISOString().split('T')[0];
+                    link.download = `Step-Inside_${studentName}_${date}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+
+                } catch (error) {
+                    console.error('이미지 다운로드 오류:', error);
+                    showNotification('이미지 다운로드에 실패했습니다.', 'error');
+                } finally {
+                    loadingSpinner.classList.add('hidden');
+                }
+            }
+
+            // --- 유틸리티 함수 ---
+            function showNotification(message, type = 'success') {
+                const notif = document.createElement('div');
+                const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+                notif.className = `no-print fixed top-5 right-5 ${bgColor} text-white py-3 px-6 rounded-lg shadow-lg animate-pulse`;
+                notif.textContent = message;
+                document.body.appendChild(notif);
+                
+                setTimeout(() => {
+                    notif.remove();
+                }, 3000);
+            }
+            
+            // 엔터 키로 다음 입력창 이동 (Textarea 제외)
+            const inputs = document.querySelectorAll('input[type="text"]');
+            inputs.forEach((input, index) => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const nextInput = Array.from(inputs)[index + 1];
+                        if (nextInput) {
+                            nextInput.focus();
+                        } else {
+                            // 마지막 input이면 첫번째 textarea로 이동
+                            document.querySelector('textarea')?.focus();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
