@@ -144,6 +144,13 @@
             }
         }
     </style>
+<style id="mobile-fix-20261110">
+/* 폰 화면 보정(2026-11-10): 좁은 화면에서 제목·학생 정보 줄·학습지 틀이 넘치거나 쪼개지지 않게 */
+@media screen and (max-width: 640px) {
+  .student-info-print { flex-wrap: wrap !important; justify-content: flex-start !important; row-gap: 8px; }
+  .student-info-print label { white-space: nowrap; }
+}
+</style>
 </head>
 <body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
 
